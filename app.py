@@ -5,9 +5,8 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 
 # ================================
-# MySQL Configuration (Railway)
+# MySQL Configuration (Railway - PUBLIC for local)
 # ================================
-
 app.config['MYSQL_HOST'] = os.environ.get('MYSQLHOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQLUSER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQLPASSWORD')
@@ -28,7 +27,7 @@ def home():
 @app.route('/save_location', methods=['POST'])
 def save_location():
     try:
-        data = request.json
+        data = request.get_json()
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         ip = request.remote_addr
@@ -41,12 +40,11 @@ def save_location():
         mysql.connection.commit()
         cursor.close()
 
-        return jsonify({"status": "success", "message": "Location saved"})
+        return jsonify({"status": "success", "message": "Location stored"})
 
     except Exception as e:
-        print("DB ERROR:", e)   # <-- ADD THIS
+        print("DB ERROR:", e)
         return jsonify({"status": "error", "message": str(e)}), 500
-
 
 
 @app.route('/admin')
@@ -57,10 +55,6 @@ def admin():
     cursor.close()
     return render_template('admin.html', data=data)
 
-
-# ================================
-# DB TEST ROUTE (IMPORTANT)
-# ================================
 
 @app.route('/test-db')
 def test_db():
@@ -73,10 +67,6 @@ def test_db():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-
-# ================================
-# APP START
-# ================================
 
 if __name__ == '__main__':
     app.run(debug=True)
