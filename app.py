@@ -40,7 +40,7 @@ def save_location():
         mysql.connection.commit()
         cursor.close()
 
-        return jsonify({"status": "success", "message": "Location stored"})
+        return jsonify({"status": "success", "message": "Error 404"})
 
     except Exception as e:
         print("DB ERROR:", e)
