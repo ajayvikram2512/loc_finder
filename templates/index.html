@@ -1,46 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Attendance Tracker</title>
+    <title>CampusGeo</title>
 </head>
-<body style="text-align:center; font-family:Arial">
+<body style="text-align:center;font-family:Arial">
 
-<h2>Simple Attendance APP for teachers</h2>
-<p>Geo fence tracker.</p>
+<h2>SRM UNIVERSITY🏫</h2>
 
-<button onclick="getLocation()" style="padding:15px 30px; font-size:18px; background:red; color:white; border:none; border-radius:8px;">
-    Attendance Tracker  
+
+<button onclick="sendLocation()" style="padding:15px;font-size:18px;background:red;color:white;border:none;">
+    Register
 </button>
 
 <p id="status"></p>
 
 <script>
-function getLocation() {
+function sendLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(sendLocation, showError);
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                fetch('/save_location', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("status").innerText = data.message;
+                });
+            },
+            function() {
+                alert("Location permission denied");
+            }
+        );
     } else {
         alert("Geolocation not supported");
     }
-}
-
-function sendLocation(position) {
-    fetch('/save_location', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("status").innerHTML =
-            "Attendance Marked Successfully.";
-    });
-}
-
-function showError(error) {
-    alert("Location permission denied. Cannot send location.");
 }
 </script>
 
