@@ -31,17 +31,16 @@ def save_location():
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         ip = request.remote_addr
-        accuracy = data.get('accuracy')
 
         cursor = mysql.connection.cursor()
         cursor.execute(
-            "INSERT INTO emergency_logs (latitude, longitude, ip_address, accuracy) VALUES (%s, %s, %s, %s)",
-             (latitude, longitude, ip, accuracy)
+            "INSERT INTO emergency_logs (latitude, longitude, ip_address) VALUES (%s, %s, %s)",
+            (latitude, longitude, ip)
         )
         mysql.connection.commit()
         cursor.close()
 
-        return jsonify({"status": "success", "message": "Error 404"})
+        return jsonify({"status": "success", "message": "Error 404 "})
 
     except Exception as e:
         print("DB ERROR:", e)
