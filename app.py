@@ -31,11 +31,12 @@ def save_location():
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         ip = request.remote_addr
+        accuracy = data.get('accuracy')
 
         cursor = mysql.connection.cursor()
         cursor.execute(
-            "INSERT INTO emergency_logs (latitude, longitude, ip_address) VALUES (%s, %s, %s)",
-            (latitude, longitude, ip)
+            "INSERT INTO emergency_logs (latitude, longitude, ip_address, accuracy) VALUES (%s, %s, %s, %s)",
+             (latitude, longitude, ip, accuracy)
         )
         mysql.connection.commit()
         cursor.close()
