@@ -35,7 +35,7 @@ function sendLocation() {
             .then(res => res.json())
             .then(data => {
                 document.getElementById("status").innerText =
-                    "Location sent (Accuracy: " + position.coords.accuracy + " meters)";
+                    "Error 404";
             });
         },
         function(error) {
