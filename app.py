@@ -44,7 +44,9 @@ def save_location():
         return jsonify({"status": "success", "message": "Location saved"})
 
     except Exception as e:
+        print("DB ERROR:", e)   # <-- ADD THIS
         return jsonify({"status": "error", "message": str(e)}), 500
+
 
 
 @app.route('/admin')
