@@ -23,6 +23,13 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
+@app.route('/get-ip')
+def get_ip():
+    return jsonify({
+        "ip_address": request.remote_addr
+    })
+
+
 
 @app.route('/save_location', methods=['POST'])
 def save_location():
