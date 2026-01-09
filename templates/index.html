@@ -16,31 +16,36 @@
 
 <script>
 function sendLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                fetch('/save_location', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById("status").innerText = data.message;
-                });
-            },
-            function() {
-                alert("Location permission denied");
-            }
-        );
-    } else {
+    if (!navigator.geolocation) {
         alert("Geolocation not supported");
+        return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            fetch('/save_location', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("status").innerText =
+                    "Location sent (Accuracy: " + position.coords.accuracy + " meters)";
+            });
+        },
+        function(error) {
+            alert("Location error: " + error.message);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
 }
 </script>
-
-</body>
-</html>
